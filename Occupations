@@ -1,0 +1,13 @@
+SELECT [Doctor], [Professor], [Singer], [Actor]
+FROM
+    (
+        SELECT ROW_NUMBER() OVER(PARTITION BY Occupation ORDER BY Name) AS row_n,*
+         -- this is the source table (aka derived table)
+        FROM OCCUPATIONS
+    ) AS Src
+    PIVOT 
+    (
+        MIN(Name)
+        FOR [Occupation] IN ([Doctor], [Professor], [Singer], [Actor])
+        --Name has to be in brackets because it is part of pivot function
+    ) AS Pvt
